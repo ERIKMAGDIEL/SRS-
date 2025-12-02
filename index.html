@@ -2,10 +2,246 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Especificación de requisitos de software - Dormitorio HVU</title>
+    <title>SRS - App Gestión Dormitorios HVU-ULV</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial; line-height: 1.6; margin: 40px; }
+        h1, h2, h3 { color: #222; }
+        h1 { text-align: center; }
+        hr { margin: 25px 0; }
+        ul, ol { margin-left: 25px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #ccc; padding: 8px; vertical-align: top; }
+        th { background: #eee; }
+        code { background: #f5f5f5; padding: 2px 5px; border-radius: 4px; }
+    </style>
 </head>
-<body style="white-space: pre-wrap; font-family: Arial; line-height: 1.4;">
- 
+
+<body>
+
+<h1>ESPECIFICACIÓN DE REQUISITOS DEL SOFTWARE (SRS)</h1>
+<p style="text-align:center;"><strong>App Gestión Dormitorios HVU-ULV</strong><br>Basado en IEEE-830</p>
+
+<hr>
+
+<h2>1. Introducción</h2>
+
+<h3>1.1 Propósito</h3>
+<p>
+Este documento SRS describe de forma completa los requisitos funcionales, no funcionales y
+reglas de negocio del sistema “App Gestión Dormitorios HVU-ULV”.
+Su propósito es servir como contrato entre el <strong>cliente (Preceptor HVU)</strong> y el equipo de desarrollo.
+</p>
+
+<h3>1.2 Alcance</h3>
+<p>
+El sistema permitirá gestionar asistencia a cultos, evaluaciones de limpieza, reportes disciplinarios,
+amonestaciones y administración de roles dentro del Hogar de Varones Universitarios (HVU).
+Incluye:
+</p>
+<ul>
+    <li>App móvil en <strong>Flutter</strong> para Android e iOS.</li>
+    <li>Backend en <strong>Node.js/Express</strong>.</li>
+    <li>Base de datos en <strong>SQL Server</strong>.</li>
+</ul>
+
+<h3>1.3 Definiciones, siglas y abreviaturas</h3>
+<ul>
+    <li><strong>HVU:</strong> Hogar de Varones Universitarios.</li>
+    <li><strong>API:</strong> Interfaz de Programación de Aplicaciones.</li>
+    <li><strong>REST:</strong> Representational State Transfer.</li>
+    <li><strong>CRUD:</strong> Create, Read, Update, Delete.</li>
+    <li><strong>UI:</strong> Interfaz de Usuario.</li>
+</ul>
+
+<h3>1.4 Referencias</h3>
+<ul>
+    <li>Plantilla IEEE-830.</li>
+    <li>Documentación del proyecto HVU.</li>
+    <li>API Flutter Docs.</li>
+    <li>Node.js Docs.</li>
+</ul>
+
+<hr>
+
+<h2>2. Descripción General</h2>
+
+<h3>2.1 Perspectiva del producto</h3>
+<p>
+La aplicación es Cliente-Servidor y se compone de:
+</p>
+<ul>
+    <li>Frontend: Flutter.</li>
+    <li>Backend REST: Node.js.</li>
+    <li>BD: SQL Server.</li>
+</ul>
+
+<h3>2.2 Funciones del producto</h3>
+<ul>
+    <li>Registro y consulta de asistencia por QR.</li>
+    <li>Evaluación de limpieza (monitores).</li>
+    <li>Consulta de limpieza (estudiantes y preceptor).</li>
+    <li>Creación y consulta de reportes disciplinarios.</li>
+    <li>Gestión de amonestaciones.</li>
+    <li>Gestión de roles (asignar/quitar monitor).</li>
+</ul>
+
+<h3>2.3 Características de los usuarios</h3>
+<table>
+<tr><th>Rol</th><th>Descripción</th></tr>
+<tr>
+    <td><strong>Preceptor</strong></td>
+    <td>Máxima autoridad. Aprueba reportes, supervisa limpieza, gestiona roles.</td>
+</tr>
+<tr>
+    <td><strong>Monitor</strong></td>
+    <td>Genera QR, registra limpieza, crea reportes.</td>
+</tr>
+<tr>
+    <td><strong>Estudiante</strong></td>
+    <td>Escanea QR, consulta limpieza, consulta reportes aprobados.</td>
+</tr>
+</table>
+
+<h3>2.4 Restricciones</h3>
+<ul>
+    <li>BD obligatoria: SQL Server.</li>
+    <li>Requiere Internet.</li>
+    <li>Autenticación obligatoria en todas las operaciones.</li>
+</ul>
+
+<hr>
+
+<h2>3. Requisitos Específicos</h2>
+
+<h3>3.1 Requisitos Funcionales (RF)</h3>
+
+<h3>RF01 – Autenticación</h3>
+<ul>
+    <li>RF01.1 El usuario debe iniciar sesión con UsuarioID y contraseña.</li>
+    <li>RF01.2 La API debe validar credenciales.</li>
+</ul>
+
+<h3>RF02 – Gestión de Asistencia</h3>
+<ul>
+    <li>RF02.1 El monitor podrá generar un QR para registrar asistencia.</li>
+    <li>RF02.2 El estudiante podrá escanear el QR.</li>
+    <li>RF02.3 La API guardará la asistencia.</li>
+</ul>
+
+<h3>RF03 – Evaluación de Limpieza</h3>
+<ul>
+    <li>RF03.1 El monitor podrá evaluar cuartos con criterios asignados.</li>
+    <li>RF03.2 La app mostrará al estudiante su última evaluación.</li>
+    <li>RF03.3 El preceptor verá limpieza general por pasillos.</li>
+</ul>
+
+<h3>RF04 – Reportes Disciplinarios</h3>
+<ul>
+    <li>RF04.1 Monitores y preceptores pueden crear reportes.</li>
+    <li>RF04.2 El reporte creado por un Monitor queda “Pendiente”.</li>
+    <li>RF04.3 El Preceptor puede Aprobar o Rechazar.</li>
+    <li>RF04.4 El estudiante solo puede ver reportes “Aprobados”.</li>
+</ul>
+
+<h3>RF05 – Amonestaciones</h3>
+<ul>
+    <li>RF05.1 El preceptor puede registrar amonestaciones.</li>
+    <li>RF05.2 El estudiante puede ver su historial.</li>
+</ul>
+
+<h3>RF06 – Gestión de Roles</h3>
+<ul>
+    <li>RF06.1 El Preceptor puede asignar o quitar rol de Monitor.</li>
+</ul>
+
+<hr>
+
+<h3>3.2 Requisitos No Funcionales (RNF)</h3>
+
+<h3>RNF01 – Rendimiento</h3>
+<ul>
+    <li>Respuestas menores a 2 segundos.</li>
+</ul>
+
+<h3>RNF02 – Seguridad</h3>
+<ul>
+    <li>Uso de HTTPS.</li>
+    <li>Validación de sesión en cada endpoint.</li>
+</ul>
+
+<h3>RNF03 – Usabilidad</h3>
+<ul>
+    <li>App intuitiva y accesible.</li>
+</ul>
+
+<h3>RNF04 – Compatibilidad</h3>
+<ul>
+    <li>Android 6+ / iOS 12+.</li>
+</ul>
+
+<hr>
+
+<h2>4. Reglas de Negocio</h2>
+<ul>
+    <li><strong>RN-01:</strong> Un estudiante no puede ver reportes “Pendiente” o “Rechazado”.</li>
+    <li><strong>RN-02:</strong> Un monitor solo puede evaluar limpieza, no aprobar reportes.</li>
+    <li><strong>RN-03:</strong> Solo el preceptor puede asignar roles.</li>
+</ul>
+
+<hr>
+
+<h2>5. Modelo de Datos (Resumen)</h2>
+
+<h3>Tablas principales</h3>
+<ul>
+    <li>Usuarios</li>
+    <li>Estudiantes</li>
+    <li>Preceptores</li>
+    <li>Limpieza y LimpiezaDetalle</li>
+    <li>Reportes</li>
+    <li>Amonestaciones</li>
+    <li>AsistenciasCultos</li>
+    <li>Cat_TipoCulto</li>
+    <li>Cat_NivelAmonestacion</li>
+</ul>
+
+<hr>
+
+<h2>6. Interfaces Externas</h2>
+
+<h3>API Escolar ULV</h3>
+<p>Valida datos oficiales del estudiante.</p>
+
+<h3>Servicio OTP</h3>
+<p>Verifica correo institucional.</p>
+
+<hr>
+
+<h2>7. Criterios de Aceptación</h2>
+<ul>
+    <li>Todas las funcionalidades descritas en el SRS están implementadas.</li>
+    <li>Sin defectos críticos abiertos.</li>
+    <li>Pruebas UAT aprobadas por el Preceptor.</li>
+    <li>Despliegue final funcional (diciembre 2025).</li>
+</ul>
+
+<hr>
+
+<h2>8. Suposiciones y Dependencias</h2>
+<ul>
+    <li>El servidor SQL Server está disponible.</li>
+    <li>El Preceptor puede validar avances.</li>
+    <li>Los estudiantes tienen acceso a Internet.</li>
+</ul>
+
+<hr>
+
+<p style="text-align:center;">FIN DEL DOCUMENTO SRS</p>
+
+</body>
+</html>
+
  
  
  
